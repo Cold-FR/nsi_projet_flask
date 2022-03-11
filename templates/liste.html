@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet HTTPS</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <h1>Projet HTTPS</h1>
+            <a href="/index"><button>Retourner à la page d'accueil</button></a>
+            <a href="#main" class="scroll-down"><i class="fas fa-arrow-alt-circle-down"></i></a>
+        </nav>
+    </header>
+    <main id="main">
+        <div class="content">
+            <h1>Langages de Programmation</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Date de création</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="languages">
+                    {% for line in lines %}
+                    <tr class="language">
+                        {% for attribute in line.keys() %}
+                        <td>{{ line[attribute] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}  
+                </tbody>
+            </table>
+            <div class="actions">
+                <button id="add">Ajouter une ligne</button>
+                <button id="edit">Modifier la sélection</button>
+                <button id="delete">Supprimer la sélection</button>
+                <button id="reset">Réinitialiser le tableau</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../static/js/global.js"></script>
+    <script src="https://kit.fontawesome.com/0f3efe0977.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

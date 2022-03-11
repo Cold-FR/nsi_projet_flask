@@ -1,0 +1,181 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('../fonts/power.ttf') format('truetype'),
+    local('Ubuntu Condensed');
+    font-display: swap
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Ubuntu';
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    color: #fff;
+    background: #4B79A1; 
+    background: no-repeat linear-gradient(to top, #283E51, #4B79A1); 
+}
+
+header {
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: block;
+}
+
+nav {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+    margin-bottom: 20px;
+    text-shadow: 0 4px 3px rgba(0,0,0,.25);
+}
+
+button {
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background-color: #283E51;
+    border-bottom: 4px solid #4B79A1;
+    transition: .3s;
+    font-size: 19px;
+}
+
+nav > a {
+    text-decoration: none;
+}
+
+nav > a > button {
+    display: block;
+    padding: 15px 20px;
+    margin: 0 auto;
+}
+
+nav > a > button:hover {
+    background-color: #4B79A1;
+    border-color: #283E51;
+}
+
+nav > .scroll-down {
+    display: block;
+    max-width: 40px;
+    margin: 30px auto 0 auto;
+    text-align: center;
+    font-size: 40px;
+    color: #4B79A1;
+    transition: .3s;
+    text-shadow: 0 2px 3px #283E51;
+}
+
+nav > .scroll-down:hover {
+    opacity: .5;
+    transform: scale(.9);
+}
+
+main {
+    padding: 30px;
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    background: #283E51; 
+}
+
+.content {
+    margin: 0 auto;
+    width: 70%;
+}
+
+table {
+    color: #444;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 8px rgba(0,0,0,.25);
+}
+
+table, th, td {
+    border: 2px solid #ddd;
+}
+
+td, th {
+    padding: 15px 20px;
+}
+
+th {
+    text-shadow: 0 2px 1px rgba(0,0,0,.25);
+    font-weight: normal;
+    background-color: #4B79A1;
+    color: #fff;
+    font-size: 20px;
+}
+
+td {
+    font-size: 16px;
+}
+
+tr:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+#selected {
+    background-color: #ddd;
+}
+
+.actions {
+    width: 100%;
+    padding: 15px 0;
+}
+
+.actions > button {
+    box-shadow: 4px 0 8px rgba(0, 0, 0, .25), -4px 0 8px rgba(0, 0, 0, .25);
+    display: inline-block;
+    margin-left: 10px;
+    padding: 10px;
+    width: calc(100% / 4 - 10px);
+    background-color: #4B79A1;
+    border-color: #fff;
+}
+
+.actions > button:first-child {
+    margin-left: 0;
+}
+
+.actions > button:hover {
+    background-color: #283E51;
+    border-color: #4B79A1;
+}
+
+input {
+    border: none;
+    border-radius: 8px;
+    background-color: #ededed;
+    border-bottom: 2px solid #4B79A1;
+    padding: 5px 10px;
+    outline: none;
+    width: 100%;
+}
