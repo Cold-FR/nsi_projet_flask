@@ -137,6 +137,10 @@ td {
     font-size: 16px;
 }
 
+tr {
+    transition: .3s;
+}
+
 tr:hover {
     cursor: pointer;
     background-color: #ddd;

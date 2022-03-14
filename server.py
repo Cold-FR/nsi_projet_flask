@@ -21,6 +21,41 @@ languages = [
     }
 ]
 
+@app.route('/', methods=['GET'])
+@app.route('/index.html', methods=['GET'])
+@app.route('/index', methods=['GET'])
+def index():
+    return render_template('index.html')
+
+@app.route('/liste', methods=['GET'])
+@app.route('/liste.html', methods=['GET'])
+def liste():
+    return render_template('liste.html', lines = languages)
+
+@app.route('/actions/add', methods=['POST'])
+def add():
+    line = json.loads(request.data.decode('utf-8'))
+    languages.append({
+        'name': line['name'],
+        'birth': line['birth'],
+        'descr': line['descr']
+    })
+    return jsonify(languages)
+
+@app.route('/actions/edit', methods=['POST'])
+def edit():
+    line = json.loads(request.data.decode('utf-8'))
+    languages[line['id']]['name'] = line['name']
+    languages[line['id']]['birth'] = line['birth']
+    languages[line['id']]['descr'] = line['descr']
+    return jsonify(languages)
+
+@app.route('/actions/delete/<index>', methods=['GET'])
+def delete(index):
+    languages.pop(int(index))
+    print(languages)
+    return jsonify(languages)
+
 @app.route('/actions/reset', methods=['GET'])
 def reset():
     languages.clear()
@@ -40,27 +75,5 @@ def reset():
         'descr': 'C est un langage de programmation impératif généraliste, de bas niveau. Inventé au début des années 1970 pour réécrire Unix, C est devenu un des langages les plus utilisés, encore de nos jours.'
     })
     return jsonify(languages)
-
-@app.route('/', methods=['GET'])
-@app.route('/index.html', methods=['GET'])
-@app.route('/index', methods=['GET'])
-def index():
-    return render_template('index.html')
-
-@app.route('/liste', methods=['GET'])
-@app.route('/liste.html', methods=['GET'])
-def liste():
-    print(languages)
-    return render_template('liste.html', lines = languages)
-
-@app.route('/actions/add', methods=['POST'])
-def add():
-    line = json.loads(request.data.decode('utf-8'))
-    languages.append({
-        'name': line['name'],
-        'birth': line['birth'],
-        'descr': line['descr']
-    })
-    return jsonify(name = line['name'], birth = line['birth'], descr = line['descr'])
 
 app.run(host='0.0.0.0', port='5001', debug=True)
