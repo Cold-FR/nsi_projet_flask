@@ -40,7 +40,7 @@ def add():
         'birth': line['birth'],
         'descr': line['descr']
     })
-    return jsonify(languages)
+    return jsonify(index = languages.index(languages[-1]), name = line['name'], birth = line['birth'], descr = line['descr'])
 
 @app.route('/actions/edit', methods=['POST'])
 def edit():
@@ -48,7 +48,7 @@ def edit():
     languages[line['id']]['name'] = line['name']
     languages[line['id']]['birth'] = line['birth']
     languages[line['id']]['descr'] = line['descr']
-    return jsonify(languages)
+    return jsonify(index = line['id'], name = line['name'], birth = line['birth'], descr = line['descr'])
 
 @app.route('/actions/delete/<index>', methods=['GET'])
 def delete(index):

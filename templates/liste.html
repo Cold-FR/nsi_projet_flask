@@ -22,7 +22,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Index</th>
                         <th>Nom</th>
                         <th>Date de création</th>
                         <th>Description</th>
@@ -31,7 +31,7 @@
                 <tbody id="languages">
                     {% for line in lines %}
                     <tr class="language">
-                        <td>{{ lines.index(line) }}</td>
+                        <td class="index">{{ lines.index(line) }}</td>
                         {% for attribute in line.keys() %}
                         <td>{{ line[attribute] }}</td>
                         {% endfor %}
