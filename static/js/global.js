@@ -26,13 +26,23 @@ function initActions() {
     if (document.getElementById('edit').innerText === 'Confirmer ?') document.getElementById('edit').innerText = 'Modifier la sélection';
 }
 
-function fetchLanguages(data) {
-    /// RESET : TTES LA LISTE / EDIT,ADD,DEL, UNIQUEMENT LIGNE AFFECTEE
-    document.getElementById('languages').innerHTML = '';
-    data.forEach((line, key) => {
-        document.getElementById('languages').innerHTML += `<tr class="language"><td>${key}</td><td>${line.name}</td><td>${line.birth}</td><td>${line.descr}</td></tr>`;
-    });
-    initSelector();
+function fetchLanguages(data, addOrEdit = false, remove = false) {
+    if (addOrEdit) {
+        if (document.getElementById('selected').classList.contains('editing')) document.getElementById('selected').classList.remove('editing');
+        if (document.getElementById('selected').classList.contains('adding')) document.getElementById('selected').classList.remove('adding');
+        document.getElementById('selected').innerHTML = `<td class="index">${data.index}</td><td>${data.name}</td><td>${data.birth}</td><td>${data.descr}</td>`;
+    } else if (remove) {
+        document.getElementById('selected').remove();
+        document.querySelectorAll('.index').forEach((div, key) => {
+            div.innerText = key;
+        });
+    } else if(!addOrEdit && !remove) {
+        document.getElementById('languages').innerHTML = '';
+        data.forEach((line, key) => {
+            document.getElementById('languages').innerHTML += `<tr class="language"><td class="index">${key}</td><td>${line.name}</td><td>${line.birth}</td><td>${line.descr}</td></tr>`;
+        });
+        initSelector();
+    }
     initActions();
 }
 
@@ -53,7 +63,7 @@ async function initForm(action) {
             })
         });
         const data = await response.json();
-        return fetchLanguages(data);
+        return fetchLanguages(data, true);
     }
 
     if (action === 'add') {
@@ -76,7 +86,6 @@ async function initForm(action) {
 
     document.querySelectorAll('#selected > td > input').forEach((div) => {
         div.addEventListener('click', e => {
-            console.log('aa');
             if (div.parentElement.parentElement.id === 'selected') e.stopPropagation();
         });
     });
@@ -102,7 +111,7 @@ document.getElementById('delete').addEventListener('click', () => {
                 method: 'GET'
             }).then(response => {
                 return response.json();
-            }).then(data => fetchLanguages(data));
+            }).then(data => fetchLanguages(data, false, true));
         }
     }
 });
