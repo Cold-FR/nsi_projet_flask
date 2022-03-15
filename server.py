@@ -40,7 +40,7 @@ def add():
         'birth': line['birth'],
         'descr': line['descr']
     })
-    return jsonify(index = languages.index(languages[-1]), name = line['name'], birth = line['birth'], descr = line['descr'])
+    return jsonify(type = 'success', status = 'La ligne a bien été ajouté.', index = languages.index(languages[-1]), name = line['name'], birth = line['birth'], descr = line['descr'])
 
 @app.route('/actions/edit', methods=['POST'])
 def edit():
@@ -48,13 +48,13 @@ def edit():
     languages[line['id']]['name'] = line['name']
     languages[line['id']]['birth'] = line['birth']
     languages[line['id']]['descr'] = line['descr']
-    return jsonify(index = line['id'], name = line['name'], birth = line['birth'], descr = line['descr'])
+    return jsonify(type = 'success', status = 'La ligne a bien été modifié.', index = line['id'], name = line['name'], birth = line['birth'], descr = line['descr'])
 
 @app.route('/actions/delete/<index>', methods=['GET'])
 def delete(index):
     languages.pop(int(index))
     print(languages)
-    return jsonify(languages)
+    return jsonify(type = 'success', status = 'La ligne a bien été supprimé.', response = languages)
 
 @app.route('/actions/reset', methods=['GET'])
 def reset():
@@ -74,6 +74,6 @@ def reset():
         'birth': 1972,
         'descr': 'C est un langage de programmation impératif généraliste, de bas niveau. Inventé au début des années 1970 pour réécrire Unix, C est devenu un des langages les plus utilisés, encore de nos jours.'
     })
-    return jsonify(languages)
+    return jsonify(type = 'success', status = 'La table a bien été réinitialisé.', response = languages)
 
 app.run(host='0.0.0.0', port='5001', debug=True)

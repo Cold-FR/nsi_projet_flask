@@ -101,6 +101,70 @@ main {
     background: #283E51; 
 }
 
+#alert {
+    z-index: 10;
+    position: fixed;
+    top: 20px;
+    right: 50px;
+    width: 200px;
+}
+
+@keyframes display-alert {
+    from {
+        right: -100%;
+    } 
+    to {
+        right: 0;
+    }
+}
+
+.alert-box {
+    animation: display-alert .3s;
+    color: #444;
+    background-color: #fff;
+    box-shadow: none;
+    border-radius: 12px;
+    padding: 10px 10px 10px 15px;
+    margin-top: 20px;
+    box-shadow: 0 8px 8px rgba(0,0,0,.25);
+    float: left;
+    transition: .3s;
+}
+
+.alert-box > #alert-close {
+    width: 10%;
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.alert-box > #alert-close:hover {
+    opacity: .75;
+}
+
+.alert-box > .alert-title {
+    text-shadow: 0 2px 0 rgba(0,0,0,.25);
+    width: 90%;
+    font-size: 26px;
+    font-weight: bold;
+    float: left;
+    margin-bottom: 5px;
+}
+
+.success > .alert-title {
+    color: #4CAF50;
+}
+
+.error > .alert-title {
+    color: #EF5350;
+}
+
+.alert-box > .alert-text {
+    float: left;
+    width: 100%;
+    font-size: 16px;
+}
+
 .content {
     margin: 0 auto;
     width: 70%;
