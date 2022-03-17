@@ -29,7 +29,30 @@ function initActions() {
 function displayAlert(type, status){
     const alert = document.getElementById('alert');
     const title = status !== 'success' ? 'Succès' : 'Erreur';
-    alert.innerHTML += `<div class="alert-box ${type}"><div id="alert-close"><i class="fas fa-times"></i></div><div class="alert-title">${title}</div><div class="alert-text">${status}</div></div>`;
+    const alertBox = document.createElement('div');
+
+    alertBox.innerHTML = `<div class="alert-close"><i class="fas fa-times"></i></div><div class="alert-title">${title}</div><div class="alert-text">${status}</div><div class="alert-timeout"></div>`;
+    alertBox.setAttribute('class', 'alert-box ' + type);
+    alert.appendChild(alertBox);
+
+    setTimeout(() => {
+        alertBox.style.animation = 'none';
+    }, 300);
+
+    let alertTimeOut = setTimeout(() => {
+        alertBox.style.animation = 'display-alert .3s reverse forwards';
+        setTimeout(() => {
+            alertBox.remove();
+        }, 300);
+    }, 5000);
+
+    alertBox.children[0].addEventListener('click', (e) => {
+        alertBox.style.animation = 'display-alert .3s reverse forwards';
+        setTimeout(() => {
+            clearTimeout(alertTimeOut);
+            alertBox.remove();
+        }, 300);
+    });
 }
 
 function fetchLanguages(data, addOrEdit = false, remove = false) {
