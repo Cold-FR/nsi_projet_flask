@@ -26,9 +26,9 @@ function initActions() {
     if (document.getElementById('edit').innerText === 'Confirmer ?') document.getElementById('edit').innerText = 'Modifier la sélection';
 }
 
-function displayAlert(type, status){
+function displayAlert(type, status) {
     const alert = document.getElementById('alert');
-    const title = status !== 'success' ? 'Succès' : 'Erreur';
+    const title = type === 'success' ? 'Succès' : 'Erreur';
     const alertBox = document.createElement('div');
 
     alertBox.innerHTML = `<div class="alert-close"><i class="fas fa-times"></i></div><div class="alert-title">${title}</div><div class="alert-text">${status}</div><div class="alert-timeout"></div>`;
@@ -82,14 +82,14 @@ function fetchLanguages(data, addOrEdit = false, remove = false) {
     initActions();
 }
 
-async function initForm(action) {
+function initForm(action) {
     initActions();
     if (document.getElementById('selected') && document.getElementById('selected').classList.contains(action + 'ing')) {
         const id = document.getElementById('selected').children[0].innerText;
         const name = document.getElementById('selected').children[1].firstElementChild.value;
         const birth = document.getElementById('selected').children[2].firstElementChild.value;
         const descr = document.getElementById('selected').children[3].firstElementChild.value;
-        const response = await fetch('./actions/' + action, {
+        fetch('./actions/' + action, {
             method: 'POST',
             body: JSON.stringify({
                 id: parseInt(id),
@@ -97,9 +97,15 @@ async function initForm(action) {
                 birth: parseInt(birth),
                 descr: descr
             })
+        }).then((response) => {
+            if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
+            return response.json();
+        }).then((data) => {
+            return fetchLanguages(data, true);
+        }).catch((error) => {
+            console.error(error);
+            return displayAlert('error', 'Il y a eu un problème avec le serveur.');
         });
-        const data = await response.json();
-        return fetchLanguages(data, true);
     }
 
     if (action === 'add') {
@@ -146,8 +152,13 @@ document.getElementById('delete').addEventListener('click', () => {
             fetch('./actions/delete/' + document.getElementById('selected').firstElementChild.innerText, {
                 method: 'GET'
             }).then(response => {
+                if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
                 return response.json();
-            }).then(data => fetchLanguages(data, false, true));
+            }).then(data => fetchLanguages(data, false, true)
+            ).catch((error) => {
+                console.error(error);
+                return displayAlert('error', 'Il y a eu un problème avec le serveur.');
+            });
         }
     }
 });
@@ -156,6 +167,11 @@ document.getElementById('reset').addEventListener('click', () => {
     fetch('./actions/reset', {
         method: 'GET'
     }).then((response) => {
+        if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
         return response.json();
-    }).then((data) => fetchLanguages(data));
+    }).then((data) => fetchLanguages(data)
+    ).catch((error) => {
+        console.error(error);
+        return displayAlert('error', 'Il y a eu un problème avec le serveur.');
+    });
 });
