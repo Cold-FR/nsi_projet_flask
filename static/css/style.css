@@ -168,6 +168,10 @@ main {
     color: #EF5350;
 }
 
+.warning > .alert-title {
+    color: #FFC107;
+}
+
 .alert-box > .alert-text {
     float: left;
     width: 100%;

@@ -1,7 +1,10 @@
+let selected = null;
+
 function selectLine(div) {
     if (div.id !== 'selected') {
         if (document.getElementById('selected')) document.getElementById('selected').id = '';
         div.id = 'selected';
+        selected = document.getElementById('selected');
         if (div.classList.contains('adding')) {
             document.getElementById('add').innerText = 'Confirmer ?';
         } else if (div.classList.contains('editing')) {
@@ -11,6 +14,7 @@ function selectLine(div) {
         }
     } else {
         div.id = '';
+        selected = null;
         initActions();
     }
 }
@@ -28,7 +32,7 @@ function initActions() {
 
 function displayAlert(type, status) {
     const alert = document.getElementById('alert');
-    const title = type === 'success' ? 'Succès' : 'Erreur';
+    const title = type === 'success' ? 'Succès' : type === 'warning' ? 'Avertissement' : 'Erreur';
     const alertBox = document.createElement('div');
 
     alertBox.innerHTML = `<div class="alert-close"><i class="fas fa-times"></i></div><div class="alert-title">${title}</div><div class="alert-text">${status}</div><div class="alert-timeout"></div>`;
@@ -56,15 +60,21 @@ function displayAlert(type, status) {
 }
 
 function fetchLanguages(data, addOrEdit = false, remove = false) {
+    document.querySelectorAll('.warning').forEach(div => {
+        div.style.animation = 'display-alert .3s reverse forwards';
+        setTimeout(() => {
+            div.remove();
+        }, 300);
+    });
     if (data && data.type) {
         displayAlert(data.type, data.status);
         if (data.type === 'success') {
             if (addOrEdit) {
-                if (document.getElementById('selected').classList.contains('editing')) document.getElementById('selected').classList.remove('editing');
-                if (document.getElementById('selected').classList.contains('adding')) document.getElementById('selected').classList.remove('adding');
-                document.getElementById('selected').innerHTML = `<td class="index">${data.index}</td><td>${data.name}</td><td>${data.birth}</td><td>${data.descr}</td>`;
+                if (selected.classList.contains('editing')) selected.classList.remove('editing');
+                if (selected.classList.contains('adding')) selected.classList.remove('adding');
+                selected.innerHTML = `<td class="index">${data.index}</td><td>${data.name}</td><td>${data.birth}</td><td>${data.descr}</td>`;
             } else if (remove) {
-                document.getElementById('selected').remove();
+                selected.remove();
                 document.querySelectorAll('.index').forEach((div, key) => {
                     div.innerText = key;
                 });
@@ -84,19 +94,17 @@ function fetchLanguages(data, addOrEdit = false, remove = false) {
 
 function initForm(action) {
     initActions();
-    if (document.getElementById('selected') && document.getElementById('selected').classList.contains(action + 'ing')) {
-        const id = document.getElementById('selected').children[0].innerText;
-        const name = document.getElementById('selected').children[1].firstElementChild.value;
-        const birth = document.getElementById('selected').children[2].firstElementChild.value;
-        const descr = document.getElementById('selected').children[3].firstElementChild.value;
+    if (selected !== null && selected.classList.contains(action + 'ing')) {
+        const selectedChildren = selected.children;
+        let dataActions = new FormData();
+        dataActions.append('index', selectedChildren[0].innerText);
+        dataActions.append('name', selectedChildren[1].firstElementChild.value);
+        dataActions.append('birth', selectedChildren[2].firstElementChild.value);
+        dataActions.append('descr', selectedChildren[3].firstElementChild.value);
+        displayAlert('warning', 'La requête est en cours...');
         fetch('./actions/' + action, {
             method: 'POST',
-            body: JSON.stringify({
-                id: parseInt(id),
-                name: name,
-                birth: parseInt(birth),
-                descr: descr
-            })
+            body: dataActions
         }).then((response) => {
             if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
             return response.json();
@@ -106,23 +114,24 @@ function initForm(action) {
             console.error(error);
             return displayAlert('error', 'Il y a eu un problème avec le serveur.');
         });
-    }
-
-    if (action === 'add') {
-        document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
-        document.getElementById('add').innerText = 'Confirmer ?';
-        selectLine(document.querySelectorAll('.language')[document.querySelectorAll('.language').length - 1]);
-        initSelector();
-    } else if (action === 'edit') {
-        if (document.getElementById('selected')) {
-            document.getElementById('selected').classList.add('editing');
-            const oldName = document.getElementById('selected').children[1].innerText;
-            const oldBirth = document.getElementById('selected').children[2].innerText;
-            const oldDescr = document.getElementById('selected').children[3].innerText;
-            document.getElementById('selected').children[1].innerHTML = `<input type="text" id="name" placeholder="Nom du langage..." value="${oldName}">`;
-            document.getElementById('selected').children[2].innerHTML = `<input type="number" id="birth" placeholder="Date de création..." value="${oldBirth}">`;
-            document.getElementById('selected').children[3].innerHTML = `<input type="text" id="descr" placeholder="Description du langage..." value="${oldDescr}">`;
-            document.getElementById('edit').innerText = 'Confirmer ?';
+    } else {
+        if (action === 'add') {
+            document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
+            document.getElementById('add').innerText = 'Confirmer ?';
+            selectLine(document.querySelectorAll('.language')[document.querySelectorAll('.language').length - 1]);
+            initSelector();
+        } else if (action === 'edit') {
+            if (selected !== null) {
+                const selectedChildren = selected.children;
+                selected.classList.add('editing');
+                const oldName = selectedChildren[1].innerText;
+                const oldBirth = selectedChildren[2].innerText;
+                const oldDescr = selectedChildren[3].innerText;
+                selectedChildren[1].innerHTML = `<input type="text" id="name" placeholder="Nom du langage..." value="${oldName}">`;
+                selectedChildren[2].innerHTML = `<input type="number" id="birth" placeholder="Date de création..." value="${oldBirth}">`;
+                selectedChildren[3].innerHTML = `<input type="text" id="descr" placeholder="Description du langage..." value="${oldDescr}">`;
+                document.getElementById('edit').innerText = 'Confirmer ?';
+            }
         }
     }
 
@@ -144,18 +153,18 @@ document.getElementById('edit').addEventListener('click', () => {
 });
 
 document.getElementById('delete').addEventListener('click', () => {
-    if (document.getElementById('selected')) {
-        if (document.getElementById('selected').classList.contains('adding')) {
-            document.getElementById('selected').remove();
+    if (selected !== null) {
+        if (selected.classList.contains('adding')) {
+            selected.remove();
             initActions();
         } else {
-            fetch('./actions/delete/' + document.getElementById('selected').firstElementChild.innerText, {
+            displayAlert('warning', 'La requête est en cours...');
+            fetch('./actions/delete?index=' + selected.firstElementChild.innerText, {
                 method: 'GET'
             }).then(response => {
                 if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
                 return response.json();
-            }).then(data => fetchLanguages(data, false, true)
-            ).catch((error) => {
+            }).then(data => fetchLanguages(data, false, true)).catch((error) => {
                 console.error(error);
                 return displayAlert('error', 'Il y a eu un problème avec le serveur.');
             });
@@ -164,13 +173,13 @@ document.getElementById('delete').addEventListener('click', () => {
 });
 
 document.getElementById('reset').addEventListener('click', () => {
+    displayAlert('warning', 'La requête est en cours...');
     fetch('./actions/reset', {
         method: 'GET'
     }).then((response) => {
         if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
         return response.json();
-    }).then((data) => fetchLanguages(data)
-    ).catch((error) => {
+    }).then((data) => fetchLanguages(data)).catch((error) => {
         console.error(error);
         return displayAlert('error', 'Il y a eu un problème avec le serveur.');
     });

@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, jsonify
 import json
 
+from markupsafe import re
+
 app = Flask(__name__)
 
 languages = [
@@ -34,27 +36,41 @@ def liste():
 
 @app.route('/actions/add', methods=['POST'])
 def add():
-    line = json.loads(request.data.decode('utf-8'))
-    languages.append({
-        'name': line['name'],
-        'birth': line['birth'],
-        'descr': line['descr']
-    })
-    return jsonify(type = 'success', status = 'La ligne a bien été ajouté.', index = languages.index(languages[-1]), name = line['name'], birth = line['birth'], descr = line['descr'])
+    name = request.form.get('name')
+    birth = request.form.get('birth')
+    descr = request.form.get('descr')
+    if name != '' and birth != '' and descr != '':
+        languages.append({
+            'name': name,
+            'birth': birth,
+            'descr': descr
+        })
+        return jsonify(type = 'success', status = 'La ligne a bien été ajouté.', index = languages.index(languages[-1]), name = name, birth = birth, descr = descr)
+    else:
+        return jsonify(type = 'error', status = 'Tous les champs n\'ont pas été complété.')
 
 @app.route('/actions/edit', methods=['POST'])
 def edit():
-    line = json.loads(request.data.decode('utf-8'))
-    languages[line['id']]['name'] = line['name']
-    languages[line['id']]['birth'] = line['birth']
-    languages[line['id']]['descr'] = line['descr']
-    return jsonify(type = 'success', status = 'La ligne a bien été modifié.', index = line['id'], name = line['name'], birth = line['birth'], descr = line['descr'])
+    index = int(request.form.get('index'))
+    name = request.form.get('name')
+    birth = request.form.get('birth')
+    descr = request.form.get('descr')
+    if index != '' and name != '' and birth != '' and descr != '':
+        languages[index]['name'] = name
+        languages[index]['birth'] = birth
+        languages[index]['descr'] = descr
+        return jsonify(type = 'success', status = 'La ligne a bien été modifié.',  index = index, name = name, birth = birth, descr = descr)
+    else:
+        return jsonify(type = 'error', status = 'Tous les champs n\'ont pas été complété.')
 
-@app.route('/actions/delete/<index>', methods=['GET'])
-def delete(index):
-    languages.pop(int(index))
-    print(languages)
-    return jsonify(type = 'success', status = 'La ligne a bien été supprimé.', response = languages)
+@app.route('/actions/delete', methods=['GET'])
+def delete():
+    index = request.args.get('index')
+    if(index != None):
+        languages.pop(int(index))
+        return jsonify(type = 'success', status = 'La ligne a bien été supprimé.', response = languages)
+    else:
+        return jsonify(type = 'error', status = 'Aucune ligne n\'a été sélectionné.')
 
 @app.route('/actions/reset', methods=['GET'])
 def reset():
