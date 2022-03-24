@@ -121,7 +121,7 @@ function initForm(action) {
             selectLine(document.querySelectorAll('.language')[document.querySelectorAll('.language').length - 1]);
             initSelector();
         } else if (action === 'edit') {
-            if (selected !== null) {
+            if (selected !== null && !selected.classList.contains('adding')) {
                 const selectedChildren = selected.children;
                 selected.classList.add('editing');
                 const oldName = selectedChildren[1].innerText;
