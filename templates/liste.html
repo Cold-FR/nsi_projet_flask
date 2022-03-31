@@ -34,9 +34,9 @@
                     {% for line in lines %}
                     <tr class="language">
                         <td class="index">{{ lines.index(line) }}</td>
-                        {% for attribute in line.keys() %}
-                        <td>{{ line[attribute] }}</td>
-                        {% endfor %}
+                        <td>{{ line.get('name', 'Indéfini') }}</td>
+                        <td>{{ line.get('birth', 'Indéfini') }}</td>
+                        <td>{{ line.get('descr', 'Indéfini') }}</td>
                     </tr>
                     {% endfor %}  
                 </tbody>
