@@ -1,7 +1,6 @@
+from urllib import response
 from flask import Flask, request, render_template, jsonify
 import json
-
-from markupsafe import re
 
 app = Flask(__name__)
 
@@ -36,41 +35,50 @@ def liste():
 
 @app.route('/actions/add', methods=['POST'])
 def add():
+    global languages
     name = request.form.get('name')
     birth = request.form.get('birth')
     descr = request.form.get('descr')
+    responseType = 'error'
+    status = 'Tous les champs n\'ont pas été complété.'
     if name != '' and birth != '' and descr != '':
         languages.append({
             'name': name,
             'birth': birth,
             'descr': descr
         })
-        return jsonify(type = 'success', status = 'La ligne a bien été ajouté.', index = languages.index(languages[-1]), name = name, birth = birth, descr = descr)
-    else:
-        return jsonify(type = 'error', status = 'Tous les champs n\'ont pas été complété.')
+        responseType = 'success'
+        status = 'La ligne a bien été ajouté.'
+    return jsonify(type = responseType, status = status, index = languages.index(languages[-1]), name = name, birth = birth, descr = descr)    
 
 @app.route('/actions/edit', methods=['POST'])
 def edit():
+    global languages
     index = int(request.form.get('index'))
     name = request.form.get('name')
     birth = request.form.get('birth')
     descr = request.form.get('descr')
+    responseType = 'error'
+    status = 'Tous les champs n\'ont pas été complété.'
     if index != '' and name != '' and birth != '' and descr != '':
         languages[index]['name'] = name
         languages[index]['birth'] = birth
         languages[index]['descr'] = descr
-        return jsonify(type = 'success', status = 'La ligne a bien été modifié.',  index = index, name = name, birth = birth, descr = descr)
-    else:
-        return jsonify(type = 'error', status = 'Tous les champs n\'ont pas été complété.')
+        responseType = 'success'
+        status = 'La ligne a bien été modifié.'
+    return jsonify(type = responseType, status = status, index = index, name = name, birth = birth, descr = descr)    
 
 @app.route('/actions/delete', methods=['GET'])
 def delete():
+    global languages
     index = request.args.get('index')
+    responseType = 'error'
+    status = 'Aucune ligne n\'a été sélectionné.'
     if(index != None):
         languages.pop(int(index))
-        return jsonify(type = 'success', status = 'La ligne a bien été supprimé.', response = languages)
-    else:
-        return jsonify(type = 'error', status = 'Aucune ligne n\'a été sélectionné.')
+        responseType = 'success'
+        status = 'La ligne a bien été supprimé.'
+    return jsonify(type = responseType, status = status, response = languages)    
 
 @app.route('/actions/reset', methods=['GET'])
 def reset():
