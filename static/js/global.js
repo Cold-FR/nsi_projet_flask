@@ -116,7 +116,7 @@ function initForm(action) {
         });
     } else {
         if (action === 'add') {
-            document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
+            document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input max="' + new Date().getFullYear() +'" min="1944" type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
             document.getElementById('add').innerText = 'Confirmer ?';
             selectLine(document.querySelectorAll('.language')[document.querySelectorAll('.language').length - 1]);
             initSelector();
@@ -128,7 +128,7 @@ function initForm(action) {
                 const oldBirth = selectedChildren[2].innerText;
                 const oldDescr = selectedChildren[3].innerText;
                 selectedChildren[1].innerHTML = `<input type="text" id="name" placeholder="Nom du langage..." value="${oldName}">`;
-                selectedChildren[2].innerHTML = `<input type="number" id="birth" placeholder="Date de création..." value="${oldBirth}">`;
+                selectedChildren[2].innerHTML = `<input max="${new Date().getFullYear()}" min="1944" type="number" id="birth" placeholder="Date de création..." value="${oldBirth}">`;
                 selectedChildren[3].innerHTML = `<input type="text" id="descr" placeholder="Description du langage..." value="${oldDescr}">`;
                 document.getElementById('edit').innerText = 'Confirmer ?';
             }
