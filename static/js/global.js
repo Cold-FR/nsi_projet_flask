@@ -21,7 +21,10 @@ function selectLine(div) {
 
 function initSelector() {
     document.querySelectorAll('.language').forEach(div => {
-        div.addEventListener('click', () => selectLine(div));
+        div.addEventListener('click', (e) => {
+            selectLine(div, e);
+            e.stopPropagation();
+        });
     });
 }
 
@@ -51,6 +54,7 @@ function displayAlert(type, status) {
     }, 5000);
 
     alertBox.children[0].addEventListener('click', (e) => {
+        e.stopPropagation();
         alertBox.style.animation = 'display-alert .3s reverse forwards';
         setTimeout(() => {
             clearTimeout(alertTimeOut);
@@ -116,7 +120,7 @@ function initForm(action) {
         });
     } else {
         if (action === 'add') {
-            document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input max="' + new Date().getFullYear() +'" min="1944" type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
+            document.getElementById('languages').innerHTML += '<tr class="language adding"><td>Indéfini</td><td><input type="text" id="name" placeholder="Nom du langage..."></td><td><input max="' + new Date().getFullYear() + '" min="1944" type="number" id="birth" placeholder="Date de création..." ></td><td><input type="text" id="descr" placeholder="Description du langage..."></td></tr>';
             document.getElementById('add').innerText = 'Confirmer ?';
             selectLine(document.querySelectorAll('.language')[document.querySelectorAll('.language').length - 1]);
             initSelector();
@@ -144,15 +148,18 @@ function initForm(action) {
 
 window.addEventListener('load', () => initSelector());
 
-document.getElementById('add').addEventListener('click', () => {
+document.getElementById('add').addEventListener('click', (e) => {
+    e.stopPropagation();
     initForm('add');
 });
 
-document.getElementById('edit').addEventListener('click', () => {
+document.getElementById('edit').addEventListener('click', (e) => {
+    e.stopPropagation();
     initForm('edit');
 });
 
-document.getElementById('delete').addEventListener('click', () => {
+document.getElementById('delete').addEventListener('click', (e) => {
+    e.stopPropagation();
     if (selected !== null) {
         if (selected.classList.contains('adding')) {
             selected.remove();
@@ -172,7 +179,8 @@ document.getElementById('delete').addEventListener('click', () => {
     }
 });
 
-document.getElementById('reset').addEventListener('click', () => {
+document.getElementById('reset').addEventListener('click', (e) => {
+    e.stopPropagation();
     displayAlert('warning', 'La requête est en cours...');
     fetch('./actions/reset', {
         method: 'GET'
@@ -183,4 +191,11 @@ document.getElementById('reset').addEventListener('click', () => {
         console.error(error);
         return displayAlert('error', 'Il y a eu un problème avec le serveur.');
     });
+});
+
+document.documentElement.addEventListener('click', (e) => {
+    if (!selected) return;
+    selected.id = '';
+    selected = null;
+    initActions();
 });
