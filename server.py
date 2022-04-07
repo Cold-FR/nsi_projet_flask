@@ -1,4 +1,3 @@
-from urllib import response
 from flask import Flask, request, render_template, jsonify
 import json
 
@@ -83,7 +82,6 @@ def delete():
 @app.route('/actions/reset', methods=['GET'])
 def reset():
     global languages
-    languages.clear()
     languages = [
     {
         'name': 'Java',
