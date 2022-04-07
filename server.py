@@ -1,3 +1,4 @@
+from urllib import response
 from flask import Flask, request, render_template, jsonify
 import json
 
@@ -100,5 +101,10 @@ def reset():
     }
     ]
     return jsonify(type = 'success', status = 'La table a bien été réinitialisé.', response = languages)
+
+@app.route('/actions/reload', methods=['GET'])
+def reload():
+    global languages
+    return jsonify(type = 'success', status = 'La table a été rechargé.', response = languages)
 
 app.run(host='0.0.0.0', port='5001', debug=True)
