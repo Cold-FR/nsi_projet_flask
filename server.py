@@ -1,4 +1,3 @@
-from urllib import response
 from flask import Flask, request, render_template, jsonify
 import json
 
