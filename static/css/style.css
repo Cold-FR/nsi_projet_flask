@@ -235,6 +235,10 @@ tr:hover {
     background-color: #ddd;
 }
 
+thead > tr:hover {
+    cursor: default;
+}
+
 #selected {
     background-color: #ddd;
 }
