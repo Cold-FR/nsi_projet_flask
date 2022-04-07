@@ -199,3 +199,17 @@ document.documentElement.addEventListener('click', (e) => {
     selected = null;
     initActions();
 });
+
+document.getElementById('reload').addEventListener('click', (e) => {
+    e.stopPropagation();
+    displayAlert('warning', 'La requête est en cours...');
+    fetch('./actions/reload', {
+        method: 'GET'
+    }).then((response) => {
+        if (!response.ok) return displayAlert('error', 'Il y a eu un problème avec le serveur.');
+        return response.json();
+    }).then((data) => fetchLanguages(data)).catch((error) => {
+        console.error(error);
+        return displayAlert('error', 'Il y a eu un problème avec le serveur.');
+    });
+});

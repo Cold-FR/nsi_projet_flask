@@ -104,8 +104,8 @@ main {
 #alert {
     z-index: 10;
     position: fixed;
-    top: 20px;
-    right: 50px;
+    top: 100px;
+    right: 30px;
     width: 200px;
 }
 
@@ -275,4 +275,18 @@ input {
     padding: 5px 10px;
     outline: none;
     width: 100%;
+}
+
+#reload {
+    position: absolute;
+    top: 40px;
+    right: 30px;
+    font-size: 3em;
+    text-shadow: 0 4px 3px rgba(0,0,0,.25);
+    transition: .3s;
+}
+
+#reload:hover {
+    cursor: pointer;
+    transform: rotate(180deg);
 }
